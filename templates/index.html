@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title or "SanAs Prime - Modern Business Management & Invoicing Software" }}</title>
+    <meta name="description" content="SanAs Prime is a fast, modern and reliable business management software for invoicing, accounting, GST compliance, and multi-device sync.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-page: #fbfcfd;
+            --surface-white: #ffffff;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-50: #eff6ff;
+            --indigo-600: #4f46e5;
+            --emerald-500: #10b981;
+            --emerald-50: #ecfdf5;
+            --amber-500: #f59e0b;
+            --amber-50: #fffbeb;
+            --text-main: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --border-subtle: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 0 1px 1px rgba(15, 23, 42, 0.05);
+            --shadow-elevated: 0 25px 50px -12px rgba(15, 23, 42, 0.12), 0 0 1px 1px rgba(15, 23, 42, 0.05);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            width: 100%;
+            /* Modern Subtle SaaS Dot Grid Background */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.06) 0px, transparent 45%),
+                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.06) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.04) 0px, transparent 45%),
+                radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+            background-attachment: fixed;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* 1. TOP MODERN FROSTED NAVBAR */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            width: 100%;
+        }
+
+        .nav-inner {
+            width: 100%;
+            padding: 14px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--indigo-600) 100%);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .nav-menu a {
+            transition: color 0.2s;
+            position: relative;
+            padding: 6px 0;
+        }
+        .nav-menu a:hover { color: var(--primary-600); }
+
+        .nav-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: var(--radius-md);
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--indigo-600) 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-700) 0%, #4338ca 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+        }
+        .btn-white:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .user-license-pill {
+            background: var(--primary-50);
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .user-license-pill:hover { background: #dbeafe; }
+
+        /* 2. FULL-WIDTH HERO SECTION */
+        .hero-section {
+            width: 100%;
+            padding: 60px 5% 90px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.15fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .announcement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #e0e7ff;
+            color: #4338ca;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.08);
+        }
+
+        .hero-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.12;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+        }
+
+        .gradient-headline {
+            background: linear-gradient(135deg, var(--primary-600) 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.18rem;
+            color: var(--text-body);
+            line-height: 1.65;
+            margin-bottom: 36px;
+            max-width: 90%;
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+        }
+
+        .tag-pill .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .social-proof-strip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* 3. HIGH-FIDELITY ERP WORKSTATION MOCKUP UI */
+        .workstation-mockup {
+            background: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-elevated);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .mockup-header {
+            background: #f8fafc;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 6px;
+        }
+        .traffic-lights span { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+
+        .mockup-body {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            min-height: 380px;
+        }
+
+        .mockup-sidebar {
+            background: #f8fafc;
+            border-right: 1px solid var(--border-subtle);
+            padding: 18px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-body);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .sidebar-item.active {
+            background: var(--primary-50);
+            color: var(--primary-600);
+            font-weight: 700;
+        }
+
+        .mockup-content {
+            padding: 24px;
+            background: white;
+        }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 16px;
+            background: #fcfdfe;
+        }
+
+        .kpi-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+        .kpi-val { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+        .kpi-sub { font-size: 0.78rem; font-weight: 700; color: var(--emerald-500); margin-top: 4px; }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .invoice-table th {
+            text-align: left;
+            padding: 8px 12px;
+            color: var(--text-muted);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+        }
+
+        .invoice-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .status-paid { background: #dcfce7; color: #15803d; }
+        .status-pending { background: #fef3c7; color: #b45309; }
+
+        /* 4. LOGGED IN CUSTOMER LICENSE STRIP */
+        .license-workspace-strip {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid var(--primary-600);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .license-mono {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f1f5f9;
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* 5. BENTO GRID FEATURES SECTION */
+        .features-section {
+            width: 100%;
+            padding: 90px 5%;
+            background: white;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 14px;
+        }
+
+        .section-header p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            width: 100%;
+        }
+
+        .bento-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 36px 30px;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card);
+            border-color: #cbd5e1;
+            background: white;
+        }
+
+        .bento-card.col-8 { grid-column: span 8; }
+        .bento-card.col-4 { grid-column: span 4; }
+        .bento-card.col-6 { grid-column: span 6; }
+
+        .bento-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .icon-blue { background: #dbeafe; color: #1d4ed8; }
+        .icon-emerald { background: #d1fae5; color: #065f46; }
+        .icon-cyan { background: #cffafe; color: #0e7490; }
+        .icon-amber { background: #fef3c7; color: #92400e; }
+
+        .bento-card h3 { font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .bento-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+        /* 6. FULL-WIDTH DOWNLOADS SECTION */
+        .downloads-section {
+            width: 100%;
+            background: var(--bg-page);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 90px 5%;
+        }
+
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            width: 100%;
+        }
+
+        .download-card {
+            background: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s;
+        }
+        .download-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+
+        .os-icon { font-size: 3rem; margin-bottom: 16px; }
+
+        /* FOOTER */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 70px 5% 40px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 { color: white; font-size: 1rem; font-weight: 700; margin-bottom: 18px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 12px; font-size: 0.92rem; }
+        .footer-col a:hover { color: white; }
+
+        @media (max-width: 1024px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+            .hero-title { font-size: 2.8rem; }
+            .nav-menu { display: none; }
+            .bento-card.col-8, .bento-card.col-4, .bento-card.col-6 { grid-column: span 12; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="nav-inner">
+            <a href="/" class="brand">
+                <div class="brand-icon">S</div>
+                SanAs Prime
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#downloads">Downloads</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#support">Support</a></li>
+            </ul>
+
+            <div class="nav-cta-group">
+                {% if user %}
+                    <div class="user-license-pill" onclick="copyKey()" title="Click to copy workstation license">
+                        👤 {{ user.first_name }} &bull; <span style="font-family: monospace;">{{ user.license_key }}</span> 📋
+                    </div>
+                    <button onclick="handleLogout()" class="btn btn-white" style="padding: 8px 16px;">Log Out</button>
+                {% else %}
+                    <a href="/login" class="btn btn-white" style="padding: 8px 18px;">Log In</a>
+                    <a href="/signup" class="btn btn-primary" style="padding: 8px 20px;">Start Free Trial ↗</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- FULL-WIDTH HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-grid">
+            <div>
+                {% if user %}
+                    <!-- Logged in License Banner -->
+                    <div class="license-workspace-strip">
+                        <div>
+                            <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-600); text-transform: uppercase; margin-bottom: 4px;">
+                                Active License &bull; {{ user.plan or 'Professional' }}
+                            </div>
+                            <div class="license-mono" id="user-license-key">{{ user.license_key }}</div>
+                        </div>
+                        <button onclick="copyKey()" id="btn-copy" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">
+                            📋 Copy Key
+                        </button>
+                    </div>
+                {% endif %}
+
+                <div class="announcement-badge">
+                    <span>🚀</span> SanAs Prime 7.2 &bull; High-Speed Desktop Core + Cloud Sync
+                </div>
+
+                <h1 class="hero-title">
+                    The Modern Operating System for <span class="gradient-headline">Your Business</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    High-speed native invoicing, automated GST compliance, multi-branch inventory, and secure cloud synchronization engineered for growing enterprises.
+                </p>
+
+                <div class="hero-tags">
+                    <div class="tag-pill"><span class="indicator" style="background: var(--primary-600);"></span> GST Invoicing & E-Way</div>
+                    <div class="tag-pill"><span class="indicator" style="background: var(--emerald-500);"></span> Real-Time Cloud Sync</div>
+                    <div class="tag-pill"><span class="indicator" style="background: #06b6d4;"></span> Offline SQLite Performance</div>
+                    <div class="tag-pill"><span class="indicator" style="background: var(--amber-500);"></span> Multi-Branch Backups</div>
+                </div>
+
+                <div class="hero-cta-group">
+                    <a href="#downloads" class="btn btn-primary" style="padding: 14px 32px; font-size: 1rem;">
+                        Download Desktop App ↗
+                    </a>
+                    {% if not user %}
+                        <a href="/signup" class="btn btn-white" style="padding: 14px 28px; font-size: 1rem;">
+                            14-Day Free Trial
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="social-proof-strip">
+                    <span>⭐⭐⭐⭐⭐</span>
+                    <span>Trusted by 10,000+ businesses across India</span>
+                </div>
+            </div>
+
+            <!-- HERO RIGHT WORKSTATION MOCKUP UI -->
+            <div class="workstation-mockup">
+                <div class="mockup-header">
+                    <div class="traffic-lights">
+                        <span style="background: #ef4444;"></span>
+                        <span style="background: #f59e0b;"></span>
+                        <span style="background: #10b981;"></span>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
+                        SanAs Prime Workstation &bull; Invoicing & GST Hub
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--emerald-500);">
+                        <span style="width: 8px; height: 8px; background: var(--emerald-500); border-radius: 50%;"></span>
+                        Live
+                    </div>
+                </div>
+
+                <div class="mockup-body">
+                    <div class="mockup-sidebar">
+                        <div class="sidebar-item active">📊 Dashboard</div>
+                        <div class="sidebar-item">🧾 Invoices</div>
+                        <div class="sidebar-item">📦 Inventory</div>
+                        <div class="sidebar-item">👥 Customers</div>
+                        <div class="sidebar-item">🏦 Banking</div>
+                        <div class="sidebar-item">⚙️ Settings</div>
+                    </div>
+
+                    <div class="mockup-content">
+                        <div class="kpi-row">
+                            <div class="kpi-card">
+                                <div class="kpi-title">Monthly Revenue</div>
+                                <div class="kpi-val">₹ 18,45,200</div>
+                                <div class="kpi-sub">↑ 24.8% vs last month</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-title">GST Output Tax</div>
+                                <div class="kpi-val">₹ 3,32,100</div>
+                                <div class="kpi-sub" style="color: var(--primary-600);">100% Tax Compliant</div>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+                            Recent Dispatched Invoices
+                        </div>
+
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: var(--primary-600); font-family: monospace;">#INV-2026-089</td>
+                                    <td>Apex Retailers Ltd</td>
+                                    <td><span class="status-badge status-paid">Paid</span></td>
+                                    <td>₹ 42,500.00</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: var(--primary-600); font-family: monospace;">#INV-2026-090</td>
+                                    <td>Bharat Dynamics Pvt</td>
+                                    <td><span class="status-badge status-pending">In Review</span></td>
+                                    <td>₹ 1,18,000.00</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: var(--primary-600); font-family: monospace;">#INV-2026-091</td>
+                                    <td>Zenith Logistics</td>
+                                    <td><span class="status-badge status-paid">Paid</span></td>
+                                    <td>₹ 23,400.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BENTO GRID FEATURES SECTION -->
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <h2>Engineered for Business Speed & Clarity</h2>
+            <p>Powerful accounting and workstation capabilities designed to eliminate complexity.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card col-8">
+                <div>
+                    <div class="bento-icon icon-blue">⚡</div>
+                    <h3>High-Speed Desktop Core with Local SQLite</h3>
+                    <p>Experience zero-latency operations. Create thousands of invoices, query inventory, and generate GST audit reports instantly on your local workstation without depending on a constant internet connection.</p>
+                </div>
+            </div>
+
+            <div class="bento-card col-4">
+                <div>
+                    <div class="bento-icon icon-emerald">🧾</div>
+                    <h3>Automated GST & E-Way Bills</h3>
+                    <p>Instant tax calculations, HSN/SAC lookups, and 1-click GSTR-1, GSTR-3B JSON exports for seamless filing.</p>
+                </div>
+            </div>
+
+            <div class="bento-card col-4">
+                <div>
+                    <div class="bento-icon icon-cyan">☁️</div>
+                    <h3>Multi-Branch Cloud Sync</h3>
+                    <p>Keep your office desktop, warehouse laptop, and retail counter synchronized in real time with 256-bit SSL encryption.</p>
+                </div>
+            </div>
+
+            <div class="bento-card col-8">
+                <div>
+                    <div class="bento-icon icon-amber">📦</div>
+                    <h3>Smart Inventory & Stock Control</h3>
+                    <p>Real-time multi-warehouse stock monitoring, automated batch tracking, supplier purchase orders, and low-stock reorder triggers to prevent stockouts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FULL-WIDTH DOWNLOADS SECTION -->
+    <section class="downloads-section" id="downloads">
+        <div class="section-header">
+            <h2>Download SanAs Prime for your OS</h2>
+            <p>Native 64-bit installers for your workstations with free automatic updates.</p>
+        </div>
+
+        <div class="downloads-grid">
+            <div class="download-card">
+                <div>
+                    <div class="os-icon">🪟</div>
+                    <h3 style="font-size: 1.35rem; margin-bottom: 6px; color: var(--text-main);">Windows 11 / 10</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px;">SanAs_Prime_v7.2.0_Setup.exe &bull; ~84 MB</p>
+                </div>
+                <a href="/download/windows" class="btn btn-primary" style="justify-content: center;">⬇ Download for Windows</a>
+            </div>
+
+            <div class="download-card" style="border-color: #bfdbfe; background: white;">
+                <div>
+                    <div class="os-icon">🍎</div>
+                    <h3 style="font-size: 1.35rem; margin-bottom: 6px; color: var(--text-main);">macOS</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px;">Universal DMG for Apple Silicon & Intel</p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="/download/mac-silicon" class="btn btn-primary" style="justify-content: center;">⬇ Apple Silicon DMG</a>
+                    <a href="/download/mac-intel" class="btn btn-white" style="justify-content: center; font-size: 0.88rem;">⬇ Intel Mac DMG</a>
+                </div>
+            </div>
+
+            <div class="download-card">
+                <div>
+                    <div class="os-badge-icon os-icon">🐧</div>
+                    <h3 style="font-size: 1.35rem; margin-bottom: 6px; color: var(--text-main);">Linux</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px;">Standalone AppImage &bull; 64-bit</p>
+                </div>
+                <a href="/download/linux" class="btn btn-white" style="justify-content: center;">⬇ Download AppImage</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="support">
+        <div class="footer-grid">
+            <div>
+                <div class="brand" style="color: white; margin-bottom: 14px;">
+                    <div class="brand-icon">S</div>
+                    SanAs Prime
+                </div>
+                <p style="font-size: 0.9rem; line-height: 1.6; max-width: 360px;">Fast, modern, and reliable business management software for growing enterprises.</p>
+                <p style="font-size: 0.82rem; margin-top: 18px; color: #64748b;">© 2026 SanAs Software Solutions Pvt. Ltd. All rights reserved.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Software</h4>
+                <ul>
+                    <li><a href="/download/windows">Windows Installer</a></li>
+                    <li><a href="/download/mac-silicon">macOS Installer</a></li>
+                    <li><a href="/download/linux">Linux AppImage</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Customer Portal</h4>
+                <ul>
+                    <li><a href="/login">Customer Login</a></li>
+                    <li><a href="/signup">Free Trial Signup</a></li>
+                    <li><a href="#downloads">Release Notes</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Security & Privacy</h4>
+                <ul>
+                    <li>🔒 256-Bit SSL Cloud Sync</li>
+                    <li>🛡️ 2FA Verified Mobile Access</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+        let supabaseClient = null;
+        const supaUrl = "{{ supabase_config.supabase_url }}";
+        const supaKey = "{{ supabase_config.supabase_anon_key }}";
+
+        if (supaUrl && supaKey && window.supabase) {
+            try { supabaseClient = window.supabase.createClient(supaUrl, supaKey); } catch (e) {}
+        }
+
+        function copyKey() {
+            const el = document.getElementById('user-license-key');
+            const btn = document.getElementById('btn-copy');
+            if (el) {
+                navigator.clipboard.writeText(el.textContent.trim());
+                if (btn) {
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(() => { btn.textContent = '📋 Copy Key'; }, 2000);
+                }
+            }
+        }
+
+        async function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                if (supabaseClient) { try { await supabaseClient.auth.signOut(); } catch (e) {} }
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/';
+            }
+        }
+    </script>
+</body>
+</html>

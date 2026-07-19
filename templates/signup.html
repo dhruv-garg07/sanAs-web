@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - SanAs Prime 7.2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --tally-cream: #fdfaf3;
+            --tally-blue: #0077b6;
+            --tally-yellow: #f8c12c;
+            --tally-yellow-hover: #e5b020;
+            --dark: #1a202c;
+            --text-muted: #4a5568;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--tally-cream);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            width: 100vw;
+            min-height: 100vh;
+        }
+
+        /* LEFT BRAND SHOWCASE PANEL */
+        .brand-panel {
+            background: linear-gradient(135deg, #005f94 0%, #0077b6 100%);
+            color: white;
+            padding: 60px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(248, 193, 44, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .top-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand-script {
+            font-family: 'Caveat', cursive, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .brand-script span {
+            display: block;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-hero {
+            margin: auto 0;
+            max-width: 460px;
+        }
+
+        .cyan-pill {
+            display: inline-block;
+            background: #7dd3fc;
+            color: #0f172a;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 4px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .feature-list li {
+            font-size: 1.05rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e0f2fe;
+        }
+
+        .trust-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 14px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        /* RIGHT FORM PANEL */
+        .form-panel {
+            background-color: #fffdf9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            position: relative;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .form-header h2 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 6px; }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        .form-control:focus {
+            border-color: var(--tally-blue);
+            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.15);
+        }
+
+        .phone-group { display: grid; grid-template-columns: 80px 1fr; gap: 8px; }
+        .country-prefix {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--tally-yellow);
+            color: #1a202c;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(248, 193, 44, 0.35);
+        }
+
+        .btn-submit:hover {
+            background: var(--tally-yellow-hover);
+            transform: translateY(-1px);
+        }
+
+        .divider-or {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        .divider-or::before, .divider-or::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
+        .divider-or span { padding: 0 12px; }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            background: white;
+            color: #374151;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-google:hover { background: #f8fafc; }
+
+        /* 6-DIGIT OTP GRID */
+        .otp-inputs-grid { display: flex; justify-content: center; gap: 10px; margin: 24px 0; }
+        .otp-box {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            background: #f8fafc;
+        }
+        .otp-box:focus { border-color: var(--tally-blue); background: #ffffff; }
+
+        .login-link { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); }
+        .login-link a { color: var(--tally-blue); font-weight: 700; text-decoration: underline; }
+
+        @media (max-width: 968px) {
+            .split-container { grid-template-columns: 1fr; }
+            .brand-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="split-container">
+        <!-- LEFT HERO PANEL (Tally Aesthetic) -->
+        <div class="brand-panel">
+            <a href="/" class="top-brand">
+                <div class="brand-script">
+                    SanAs
+                    <span>Prime 7.2</span>
+                </div>
+            </a>
+
+            <div class="panel-hero">
+                <div class="cyan-pill">Thoughtfully built</div>
+                <h1 class="panel-title">Run your business like a pro with SanAs</h1>
+                
+                <ul class="feature-list">
+                    <li>✔️ GST Compliant Invoicing & E-Way Bills</li>
+                    <li>✔️ AI Powered Document OCR Processing</li>
+                    <li>✔️ Encrypted Multi-Device Cloud Sync</li>
+                    <li>✔️ High-Speed Desktop Native Performance</li>
+                </ul>
+
+                <div class="trust-badge-row">
+                    <span style="font-size: 1.8rem;">🔒</span>
+                    <div>
+                        <strong style="display: block; font-size: 0.95rem;">256-Bit SSL Encrypted</strong>
+                        <span style="font-size: 0.8rem; color: #bae6fd;">Your business data stays completely private & secure.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 0.8rem; color: #bae6fd;">
+                © 2026 SanAs Software Solutions Pvt. Ltd.
+            </div>
+        </div>
+
+        <!-- RIGHT FORM PANEL -->
+        <div class="form-panel">
+            <div class="form-card">
+                <!-- STEP 1: Registration Form -->
+                <div id="step-signup-form">
+                    <div class="form-header">
+                        <h2>Create your SanAs Account</h2>
+                        <p>Start your 14-day free trial. Mobile OTP verification required.</p>
+                    </div>
+
+                    <form id="signup-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="fname">First Name</label>
+                                <input type="text" id="fname" class="form-control" placeholder="Dhruv" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label for="lname">Last Name</label>
+                                <input type="text" id="lname" class="form-control" placeholder="Garg" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Work Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="name@company.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" class="form-control" placeholder="Minimum 8 characters" minlength="8" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Mobile Phone (For 6-Digit SMS OTP)</label>
+                            <div class="phone-group">
+                                <div class="country-prefix">🇮🇳 +91</div>
+                                <input type="tel" id="phone" class="form-control" placeholder="98112 34567" required>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; font-size: 0.82rem; color: var(--text-muted); margin: 16px 0 20px;">
+                            <input type="checkbox" id="terms" checked required style="accent-color: var(--tally-blue); margin-top: 3px;">
+                            <label for="terms">I agree to the <a href="/#terms" style="color: var(--tally-blue); font-weight: 700;">Terms</a> and <a href="/#privacy" style="color: var(--tally-blue); font-weight: 700;">Privacy Policy</a> of SanAs.</label>
+                        </div>
+
+                        <button type="submit" class="btn-submit" id="btn-submit-signup">
+                            VERIFY PHONE & CREATE ACCOUNT ↗
+                        </button>
+                    </form>
+
+                    <div class="divider-or"><span>or continue with</span></div>
+
+                    <button type="button" class="btn-google" onclick="handleGoogleSignUp()">
+                        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        Sign in with Google
+                    </button>
+
+                    <div class="login-link">
+                        Already have a SanAs account? <a href="/login">Log In</a>
+                    </div>
+                </div>
+
+                <!-- STEP 2: 6-Digit Phone OTP Verification -->
+                <div id="step-otp-verification" style="display: none; text-align: center;">
+                    <div style="font-size: 2.4rem; margin-bottom: 8px;">📱</div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--dark); margin-bottom: 6px;">Verify Mobile Number</h2>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px;">Enter the 6-digit code sent via SMS.</p>
+
+                    <form id="otp-form">
+                        <div class="otp-inputs-grid">
+                            <input type="text" maxlength="1" inputmode="numeric" class="otp-box" autofocus required>
+                            <input type="text" maxlength="1" inputmode="numeric" class="otp-box" required>
+                            <input type="text" maxlength="1" inputmode="numeric" class="otp-box" required>
+                            <input type="text" maxlength="1" inputmode="numeric" class="otp-box" required>
+                            <input type="text" maxlength="1" inputmode="numeric" class="otp-box" required>
+                            <input type="text" maxlength="1" inputmode="numeric" class="otp-box" required>
+                        </div>
+
+                        <button type="submit" class="btn-submit" id="btn-verify-otp">
+                            VERIFY & ACTIVATE SANAS ↗
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
+                        Didn't receive SMS? <span id="resend-timer-txt">Resend in <strong>59s</strong></span>
+                        <button id="btn-resend" onclick="sendSignupOTP()" style="display: none; background: none; border: none; color: var(--tally-blue); font-weight: 700; cursor: pointer; text-decoration: underline;">Resend 6-Digit Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        let supabaseClient = null;
+        const supaUrl = "{{ supabase_config.supabase_url }}";
+        const supaKey = "{{ supabase_config.supabase_anon_key }}";
+
+        if (supaUrl && supaKey && window.supabase) {
+            try { supabaseClient = window.supabase.createClient(supaUrl, supaKey); } catch (e) {}
+        }
+
+        let signupData = {};
+
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            signupData.first_name = document.getElementById('fname').value.trim();
+            signupData.last_name = document.getElementById('lname').value.trim();
+            signupData.email = document.getElementById('email').value.trim();
+            signupData.password = document.getElementById('password').value;
+            signupData.phone = "+91" + document.getElementById('phone').value.trim().replace("+91", "").trim();
+            signupData.provider = "signup";
+
+            sendSignupOTP();
+        });
+
+        async function sendSignupOTP() {
+            document.getElementById('step-signup-form').style.display = 'none';
+            document.getElementById('step-otp-verification').style.display = 'block';
+
+            try {
+                if (supabaseClient) {
+                    try { await supabaseClient.auth.signInWithOtp({ phone: signupData.phone }); } catch (e) {}
+                }
+
+                await fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: signupData.phone, email: signupData.email, provider: 'signup' })
+                });
+            } catch (err) {}
+
+            startTimer();
+            setupBoxes();
+        }
+
+        function setupBoxes() {
+            const boxes = document.querySelectorAll('.otp-box');
+            boxes.forEach((input, index) => {
+                input.value = '';
+                input.oninput = () => {
+                    if (input.value.length === 1 && index < boxes.length - 1) boxes[index + 1].focus();
+                };
+                input.onkeydown = (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) boxes[index - 1].focus();
+                };
+                input.onpaste = (e) => {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text').trim();
+                    if (/^\d{6}$/.test(text)) {
+                        text.split('').forEach((ch, i) => { if (boxes[i]) boxes[i].value = ch; });
+                        if (boxes[5]) boxes[5].focus();
+                    }
+                };
+            });
+            if (boxes[0]) boxes[0].focus();
+        }
+
+        document.getElementById('otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const boxes = document.querySelectorAll('.otp-box');
+            let otp = '';
+            boxes.forEach(b => otp += b.value.trim());
+
+            if (otp.length !== 6) {
+                alert('Please enter all 6 digits of the verification code.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-verify-otp');
+            btn.textContent = 'Verifying Code...';
+            btn.disabled = true;
+
+            try {
+                if (supabaseClient) {
+                    try { await supabaseClient.auth.verifyOtp({ phone: signupData.phone, token: otp, type: 'sms' }); } catch (e) {}
+                }
+
+                const res = await fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: signupData.phone,
+                        otp: otp,
+                        email: signupData.email,
+                        first_name: signupData.first_name,
+                        last_name: signupData.last_name,
+                        password: signupData.password,
+                        provider: 'signup'
+                    })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    window.location.href = data.redirect_url || '/';
+                } else {
+                    alert(data.detail || 'Incorrect 6-digit verification code. Please check your SMS.');
+                    btn.disabled = false;
+                    btn.textContent = 'VERIFY & ACTIVATE SANAS ↗';
+                }
+            } catch (err) {
+                alert('Connection error. Please try again.');
+                btn.disabled = false;
+                btn.textContent = 'VERIFY & ACTIVATE SANAS ↗';
+            }
+        });
+
+        let timer = null;
+        function startTimer() {
+            let left = 59;
+            const txt = document.getElementById('resend-timer-txt');
+            const btn = document.getElementById('btn-resend');
+            txt.style.display = 'inline';
+            btn.style.display = 'none';
+
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                left--;
+                txt.innerHTML = `Resend in <strong>${left}s</strong>`;
+                if (left <= 0) {
+                    clearInterval(timer);
+                    txt.style.display = 'none';
+                    btn.style.display = 'inline';
+                }
+            }, 1000);
+        }
+
+        async function handleGoogleSignUp() {
+            if (supabaseClient) {
+                try {
+                    const { error } = await supabaseClient.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: { redirectTo: window.location.origin + '/auth/callback' }
+                    });
+                    if (error) { window.location.href = '/?trigger=google_oauth'; }
+                } catch (e) {
+                    window.location.href = '/?trigger=google_oauth';
+                }
+            } else {
+                window.location.href = '/?trigger=google_oauth';
+            }
+        }
+    </script>
+</body>
+</html>

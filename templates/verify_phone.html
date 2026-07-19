@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Phone Number - San As CRM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #0284c7;
+            --dark: #0f172a;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --bg-page: #f8fafc;
+            --radius-xl: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text-main);
+        }
+
+        .verify-card {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            position: relative;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 24px;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .user-greeting {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px; }
+
+        .phone-group { display: grid; grid-template-columns: 85px 1fr; gap: 8px; }
+        .country-prefix {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .btn-action:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        /* 6-Digit OTP Inputs */
+        .otp-inputs-grid { display: flex; justify-content: center; gap: 12px; margin: 28px 0; }
+        .otp-box {
+            width: 52px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            outline: none;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+        .otp-box:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
+
+        .error-alert {
+            display: none;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .resend-box { margin-top: 24px; font-size: 0.9rem; color: var(--text-muted); text-align: center; }
+        .resend-btn { background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="verify-card">
+        <a href="/" class="brand-header">
+            <div class="brand-icon">S</div>
+            SanAs Prime
+        </a>
+
+        <div class="user-greeting">
+            👤 Logged in as <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+        </div>
+
+        <!-- STEP 1: Phone Entry -->
+        <div id="step-phone-input">
+            <h1 class="title">Verify Mobile Number</h1>
+            <p class="subtitle">Enter your mobile number to receive your 6-digit SMS verification code.</p>
+
+            <div class="error-alert" id="phone-error-alert"></div>
+
+            <form id="phone-submit-form">
+                <div class="form-group">
+                    <label for="input-phone">Mobile Phone Number</label>
+                    <div class="phone-group">
+                        <div class="country-prefix">🇮🇳 +91</div>
+                        <input type="tel" id="input-phone" class="form-control" placeholder="98112 34567" value="{{ user.phone|replace('+91 ', '')|replace('+91', '') }}" required autofocus>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-action" id="btn-send-code">
+                    SEND 6-DIGIT CODE &rarr;
+                </button>
+            </form>
+        </div>
+
+        <!-- STEP 2: 6-Digit OTP Entry -->
+        <div id="step-otp-input" style="display: none; text-align: center;">
+            <div style="font-size: 2.8rem; margin-bottom: 8px;">📱</div>
+            <h1 class="title">Enter 6-Digit Code</h1>
+            <p class="subtitle">Please enter the 6-digit verification code sent via SMS to your mobile number.</p>
+
+            <div class="error-alert" id="otp-error-alert"></div>
+
+            <form id="verify-otp-form">
+                <div class="otp-inputs-grid">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-box" autofocus required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-box" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-box" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-box" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-box" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-box" required>
+                </div>
+
+                <button type="submit" class="btn-action" id="btn-submit-verify">
+                    VERIFY & ACTIVATE WORKSPACE ↗
+                </button>
+            </form>
+
+            <div class="resend-box">
+                Didn't receive SMS? <span id="timer-label">Resend in <strong>59s</strong></span>
+                <button id="btn-resend-link" class="resend-btn" onclick="sendCode()" style="display: none;">Resend 6-Digit Code</button>
+            </div>
+            
+            <div style="margin-top: 16px;">
+                <button onclick="changePhone()" style="background: none; border: none; color: #64748b; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">
+                    ← Edit Phone Number
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const supaUrl = "{{ supabase_config.supabase_url }}";
+        const supaKey = "{{ supabase_config.supabase_anon_key }}";
+        let supabaseClient = null;
+
+        if (supaUrl && supaKey && window.supabase) {
+            try { supabaseClient = window.supabase.createClient(supaUrl, supaKey); } catch (e) {}
+        }
+
+        let currentPhone = "";
+        const userEmail = "{{ user.email }}";
+
+        document.getElementById('phone-submit-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const rawPhone = document.getElementById('input-phone').value.trim().replace("+91", "").trim();
+            if (rawPhone.length < 10) {
+                showError('phone-error-alert', 'Please enter a valid 10-digit mobile number.');
+                return;
+            }
+            currentPhone = "+91" + rawPhone;
+            sendCode();
+        });
+
+        async function sendCode() {
+            hideError('phone-error-alert');
+            hideError('otp-error-alert');
+            const btn = document.getElementById('btn-send-code');
+            btn.textContent = 'SENDING SMS...';
+            btn.disabled = true;
+
+            try {
+                if (supabaseClient) {
+                    try { 
+                        await supabaseClient.auth.signInWithOtp({ phone: currentPhone }); 
+                    } catch (supaErr) {}
+                }
+
+                const response = await fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: currentPhone, email: userEmail })
+                });
+
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    document.getElementById('step-phone-input').style.display = 'none';
+                    document.getElementById('step-otp-input').style.display = 'block';
+                    startCountdown();
+                    setupOtpInputs();
+                } else {
+                    showError('phone-error-alert', data.detail || 'Could not send verification code. Please try again.');
+                }
+            } catch (err) {
+                showError('phone-error-alert', 'Network connection error. Please try again.');
+            } finally {
+                btn.textContent = 'SEND 6-DIGIT CODE →';
+                btn.disabled = false;
+            }
+        }
+
+        function setupOtpInputs() {
+            const boxes = document.querySelectorAll('.otp-box');
+            boxes.forEach((box, idx) => {
+                box.value = '';
+                box.oninput = () => {
+                    if (box.value.length === 1 && idx < boxes.length - 1) {
+                        boxes[idx + 1].focus();
+                    }
+                };
+                box.onkeydown = (e) => {
+                    if (e.key === 'Backspace' && !box.value && idx > 0) {
+                        boxes[idx - 1].focus();
+                    }
+                };
+                box.onpaste = (e) => {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text').trim();
+                    if (/^\d{6}$/.test(text)) {
+                        text.split('').forEach((ch, i) => { if (boxes[i]) boxes[i].value = ch; });
+                        if (boxes[5]) boxes[5].focus();
+                    }
+                };
+            });
+            if (boxes[0]) boxes[0].focus();
+        }
+
+        document.getElementById('verify-otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError('otp-error-alert');
+
+            const boxes = document.querySelectorAll('.otp-box');
+            let otp = '';
+            boxes.forEach(b => otp += b.value.trim());
+
+            if (otp.length !== 6) {
+                showError('otp-error-alert', 'Please enter all 6 digits of the OTP code.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-verify');
+            btn.textContent = 'VERIFYING CODE...';
+            btn.disabled = true;
+
+            try {
+                let supaVerified = false;
+                if (supabaseClient) {
+                    try {
+                        const { data: supaData, error: supaErr } = await supabaseClient.auth.verifyOtp({
+                            phone: currentPhone,
+                            token: otp,
+                            type: 'sms'
+                        });
+                        if (supaData && supaData.session) {
+                            supaVerified = true;
+                        }
+                    } catch (supaErr) {
+                        console.warn("Supabase verify notice:", supaErr);
+                    }
+                }
+
+                const response = await fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: currentPhone,
+                        otp: otp,
+                        email: userEmail
+                    })
+                });
+
+                const data = await response.json();
+                if ((response.ok && data.success) || supaVerified) {
+                    window.location.href = data.redirect_url || '/';
+                } else {
+                    showError('otp-error-alert', data.detail || 'Incorrect 6-digit OTP code. Please check your SMS and try again.');
+                    btn.textContent = 'VERIFY & ACTIVATE WORKSPACE ↗';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                showError('otp-error-alert', 'Connection error. Please try again.');
+                btn.textContent = 'VERIFY & ACTIVATE WORKSPACE ↗';
+                btn.disabled = false;
+            }
+        });
+
+        let countdown = null;
+        function startCountdown() {
+            let sec = 59;
+            const lbl = document.getElementById('timer-label');
+            const resend = document.getElementById('btn-resend-link');
+            lbl.style.display = 'inline';
+            resend.style.display = 'none';
+
+            if (countdown) clearInterval(countdown);
+            countdown = setInterval(() => {
+                sec--;
+                lbl.innerHTML = `Resend in <strong>${sec}s</strong>`;
+                if (sec <= 0) {
+                    clearInterval(countdown);
+                    lbl.style.display = 'none';
+                    resend.style.display = 'inline';
+                }
+            }, 1000);
+        }
+
+        function changePhone() {
+            document.getElementById('step-otp-input').style.display = 'none';
+            document.getElementById('step-phone-input').style.display = 'block';
+        }
+
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            if (el) { el.textContent = msg; el.style.display = 'block'; }
+        }
+        function hideError(id) {
+            const el = document.getElementById(id);
+            if (el) { el.style.display = 'none'; }
+        }
+    </script>
+</body>
+</html>

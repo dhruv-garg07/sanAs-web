@@ -1,0 +1,28 @@
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+
+# Database Files
+*.db
+*.sqlite3
+sanas_crm.db
+
+# Python & Virtual Environments
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS & Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs & Temporary Scratch files
+*.log
+scratch/
+.system_generated/
