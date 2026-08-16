@@ -12,4 +12,9 @@
     <PackageReference Include="Scriban" Version="7.2.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="templates/**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always" />
+    <Content Include="static/**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always" />
+  </ItemGroup>
+
 </Project>

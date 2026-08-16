@@ -13,7 +13,18 @@ public class TemplateRenderer
     public TemplateRenderer(IWebHostEnvironment env)
     {
         _env = env;
-        _templatesDirectory = Path.Combine(env.ContentRootPath, "templates");
+        if (Directory.Exists(Path.Combine(env.ContentRootPath, "templates")))
+        {
+            _templatesDirectory = Path.Combine(env.ContentRootPath, "templates");
+        }
+        else if (Directory.Exists(Path.Combine(AppContext.BaseDirectory, "templates")))
+        {
+            _templatesDirectory = Path.Combine(AppContext.BaseDirectory, "templates");
+        }
+        else
+        {
+            _templatesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "templates");
+        }
     }
 
     public string Render(string templateName, Dictionary<string, object?> model)

@@ -17,6 +17,10 @@ WORKDIR /app
 # Copy output from build stage
 COPY --from=build /app/publish .
 
+# Explicitly ensure templates and static folders are copied
+COPY templates /app/templates
+COPY static /app/static
+
 # Default port configuration (Render will override via PORT env var)
 EXPOSE 8080
 ENV ASPNETCORE_HTTP_PORTS=8080

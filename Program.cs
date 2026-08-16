@@ -33,7 +33,13 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 var app = builder.Build();
 
 // Ensure static directories exist
-var staticDir = Path.Combine(app.Environment.ContentRootPath, "static");
+var contentRoot = app.Environment.ContentRootPath;
+var staticDir = Directory.Exists(Path.Combine(contentRoot, "static"))
+    ? Path.Combine(contentRoot, "static")
+    : Directory.Exists(Path.Combine(AppContext.BaseDirectory, "static"))
+        ? Path.Combine(AppContext.BaseDirectory, "static")
+        : Path.Combine(Directory.GetCurrentDirectory(), "static");
+
 var downloadsDir = Path.Combine(staticDir, "downloads");
 var imagesDir = Path.Combine(staticDir, "images");
 Directory.CreateDirectory(staticDir);
