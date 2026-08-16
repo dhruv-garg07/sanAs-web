@@ -24,5 +24,7 @@ COPY static /app/static
 # Default port configuration (Render will override via PORT env var)
 EXPOSE 8080
 ENV ASPNETCORE_HTTP_PORTS=8080
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+ENV DOTNET_SYSTEM_IO_DISABLEFILEWATCHING=1
 
 ENTRYPOINT ["dotnet", "SanAsPrime.dll"]

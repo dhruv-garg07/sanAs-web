@@ -3,6 +3,10 @@ using Microsoft.Extensions.FileProviders;
 using SanAsPrime.Models;
 using SanAsPrime.Services;
 
+// Disable Linux inotify file watchers to prevent inotify limit issues in container environments
+Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
+Environment.SetEnvironmentVariable("DOTNET_SYSTEM_IO_DISABLEFILEWATCHING", "1");
+
 // Load environment variables from .env
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
 if (File.Exists(envPath))
