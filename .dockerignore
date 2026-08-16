@@ -1,0 +1,9 @@
+bin/
+obj/
+.git/
+.gitignore
+.venv/
+__pycache__/
+*.log
+scratch/
+.system_generated/

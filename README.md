@@ -1,6 +1,6 @@
 # San As CRM - Official Website & Software Download Portal
 
-A modern, high-converting CRM software website with downloads for Windows, macOS, and Linux, built with **Python FastAPI** and HTML templates featuring inline CSS and JavaScript. Includes built-in authentication, Google OAuth onboarding, and instant **Supabase** cloud database integration.
+A modern, high-converting CRM software website with downloads for Windows, macOS, and Linux, built with **C# ASP.NET Core (.NET 8)** and HTML templates featuring modern CSS and JavaScript. Includes built-in authentication, Google OAuth onboarding, and instant **Supabase** cloud database integration.
 
 ---
 
@@ -8,45 +8,41 @@ A modern, high-converting CRM software website with downloads for Windows, macOS
 
 - **🚀 Software Download Center**: Dedicated release downloads for Windows (.exe), macOS Apple Silicon/Intel (.dmg), and Linux (.AppImage).
 - **🔐 Complete Authentication Flow**:
-  - Email/Password Signup & Login with PBKDF2 password hashing.
-  - **Sign in with Google** support.
-  - Continuation onboarding modal matching Zoho & Google OAuth patterns.
+  - Email/Password Signup & Login with PBKDF2 password hashing (compatible with existing SQLite databases).
+  - 6-Digit SMS Mobile Phone OTP verification.
+  - **Sign in with Google** support & multi-device session synchronization.
 - **⚡ Supabase Cloud Integration**:
-  - Live configuration modal right from the navbar.
+  - Direct integration with Supabase SMS Phone Auth.
   - Seamless fallback to local SQLite persistence for instant out-of-the-box offline capability.
 - **📊 Interactive CRM Workspace Preview & Dashboard**:
-  - Leads Kanban board & deal pipeline tracker.
+  - Invoicing, GST tax compliance, and revenue preview.
   - Desktop software license key generator & activation hub.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python 3 (FastAPI, Uvicorn, Jinja2, Pydantic)
-- **Frontend**: HTML5, Vanilla Inline CSS & JavaScript, Supabase JS Client CDN
-- **Database**: Local SQLite + Supabase Cloud Sync
+- **Backend**: C# .NET 8 (ASP.NET Core Minimal APIs / Kestrel, Scriban template rendering engine, Microsoft.Data.Sqlite, DotNetEnv)
+- **Frontend**: HTML5, Vanilla CSS & JavaScript, Supabase JS Client CDN
+- **Database**: Local SQLite (`sanas_crm.db`) + Supabase Cloud Auth/Sync
 
 ---
 
 ## 🚀 Quick Start Guide
 
-### 1. Activate Environment & Install Dependencies
+### 1. Run the Startup Script
 
 ```bash
-# If using the included virtual environment:
-source .venv/bin/activate
-
-# Or install directly:
-pip install fastapi uvicorn jinja2 python-multipart
+./run.sh
 ```
 
-### 2. Start the FastAPI Server
+Or run via .NET CLI directly:
 
 ```bash
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+dotnet run --urls "http://127.0.0.1:8000"
 ```
 
-### 3. Open in Browser
+### 2. Open in Browser
 
 Visit **`http://127.0.0.1:8000`**
 

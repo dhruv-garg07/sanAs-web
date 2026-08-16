@@ -1,12 +1,13 @@
 #!/bin/bash
-# San As CRM - Startup Script
+# San As CRM - Startup Script (.NET C# Backend)
 
 # Free port 8000 if occupied
 lsof -ti :8000 | xargs kill -9 2>/dev/null || true
 
-if [ -d ".venv" ]; then
-    source .venv/bin/activate
+# Add dotnet to PATH if in ~/.dotnet
+if [ -d "$HOME/.dotnet" ]; then
+    export PATH="$HOME/.dotnet:$PATH"
 fi
 
-echo "Starting San As CRM Web Server on http://127.0.0.1:8000..."
-exec python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+echo "Building and starting San As Prime C# Web Server on http://127.0.0.1:8000..."
+exec dotnet run --urls "http://127.0.0.1:8000"

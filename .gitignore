@@ -22,6 +22,12 @@ Thumbs.db
 .vscode/
 .idea/
 
+# .NET Build Artifacts
+bin/
+obj/
+*.user
+*.suo
+
 # Logs & Temporary Scratch files
 *.log
 scratch/
